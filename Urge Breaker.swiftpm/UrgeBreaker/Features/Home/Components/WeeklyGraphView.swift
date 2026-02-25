@@ -37,9 +37,8 @@ struct WeeklyGraphView: View {
                                     .fill(
                                         LinearGradient(
                                             gradient: Gradient(colors: [
-//                                                item.isToday ? Color.ubPrimary.opacity(0.9) : Color.ubPrimary.opacity(0.4),
                                                 item.isToday ? Color.ubPrimary : Color.ubPrimary.opacity(0.3),
-                                                item.isToday ? Color.ubPrimary.opacity(0.8) : Color.ubPrimary.opacity(0.2)
+                                                item.isToday ? Color.ubPrimary.opacity(0.7) : Color.ubPrimary.opacity(0.15)
                                             ]),
                                             startPoint: .top,
                                             endPoint: .bottom

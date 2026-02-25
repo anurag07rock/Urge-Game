@@ -11,7 +11,7 @@ struct FocusHoldView: View {
             
             VStack {
                 // Header handled by GameSessionView overlay
-                Spacer().frame(height: 60)
+                Spacer().frame(height: 80)
                 
                 // Timer
                 HStack {
@@ -74,15 +74,6 @@ struct FocusHoldView: View {
                     .foregroundColor(.secondary)
                     .padding(.bottom, 40)
             }
-            .overlay(
-                GameBackButton(onDismiss: {
-                    viewModel.endGame()
-                    dismiss()
-                })
-                .padding(.leading, 20)
-                .padding(.top, 20),
-                alignment: .topLeading
-            )
         }
         .onAppear {
             viewModel.startGame()

@@ -12,15 +12,10 @@ struct GroundingView: View {
                 let stage = viewModel.stages[viewModel.currentStageIndex]
                 
                 VStack(spacing: 40) {
+                    Spacer().frame(height: 80)
+                    
                     // Header
                     HStack {
-                        GameBackButton(onDismiss: {
-                            viewModel.endGame()
-                            dismiss()
-                        })
-                        .padding(.leading, 20)
-                        .padding(.top, 20)
-                        
                         Spacer()
                         
                         HStack(spacing: 4) {
@@ -35,7 +30,6 @@ struct GroundingView: View {
                         .background(Color.ubSurface)
                         .cornerRadius(Theme.layoutRadius)
                         .padding(.trailing, 20)
-                        .padding(.top, 20)
                     }
                     
                     // Main Content

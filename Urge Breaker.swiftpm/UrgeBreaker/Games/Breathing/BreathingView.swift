@@ -8,16 +8,11 @@ struct BreathingView: View {
             Color.ubBackground.ignoresSafeArea()
             
             VStack {
-                // Header without padding top to allow safe area overlay or just use padding
+                Spacer().frame(height: 80)
+                
+                // Timer Top Right
                 HStack {
-                    // Back Button Top Left
-                    GameBackButton(onDismiss: {
-                        viewModel.endGame() // Ensure timer stops
-                    })
-                    
                     Spacer()
-                    
-                    // Timer Top Right
                     Text("Time: \(Int(viewModel.timeRemaining))")
                         .font(Theme.fontHeadline.monospacedDigit())
                         .padding(.horizontal, 16)
@@ -25,7 +20,7 @@ struct BreathingView: View {
                         .background(Material.thin)
                         .cornerRadius(20)
                 }
-                .padding()
+                .padding(.horizontal)
                 
                 Spacer()
                 

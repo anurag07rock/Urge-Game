@@ -70,10 +70,24 @@ struct GameInstructionView: View {
     private func iconName(for gameType: GameType) -> String {
         switch gameType {
         case .breathing: return "wind"
-        case .tapChallenge: return "hand.tap.fill"
+        case .stressSmash: return "hand.tap.fill"
+        case .focusSniper: return "scope"
+        case .rhythmPulse: return "waveform.circle"
         case .memoryPuzzle: return "brain.head.profile"
         case .focusHold: return "circle.circle.fill"
         case .grounding: return "leaf.fill"
+        case .volcanoVent: return "flame.fill"
+        case .bubblePopBlitz: return "bubbles.and.sparkles.fill"
+        case .connectionConstellation: return "sparkles"
+        case .patternBreak: return "square.grid.2x2.fill"
+        case .waveRider: return "water.waves"
+        case .thunderJar: return "bolt.fill"
+        case .iceSculptor: return "snowflake"
+        case .moodMixer: return "theatermasks.fill"
+        case .rootAndGrow: return "tree.fill"
+        case .mirrorMind: return "circle.grid.2x2.fill"
+        case .unravel: return "lasso"
+        case .summitClimb: return "mountain.2.fill"
         }
     }
 }

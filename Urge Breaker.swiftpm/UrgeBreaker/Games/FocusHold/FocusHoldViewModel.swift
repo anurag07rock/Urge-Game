@@ -4,7 +4,7 @@ import Combine
 @MainActor
 class FocusHoldViewModel: BaseGameViewModel {
     @Published var score: Int = 0
-    @Published var timeRemaining: TimeInterval = 30
+    @Published var timeRemaining: TimeInterval = Constants.gameDuration
     @Published var isGameOver: Bool = false
     var onComplete: (() -> Void)?
     
@@ -14,7 +14,7 @@ class FocusHoldViewModel: BaseGameViewModel {
     @Published var circleScale: CGFloat = 1.0
     
     private var timer: AnyCancellable?
-    private let totalDuration: TimeInterval = 30
+    private let totalDuration: TimeInterval = Constants.gameDuration
     
     init(onComplete: (() -> Void)? = nil) {
         self.onComplete = onComplete

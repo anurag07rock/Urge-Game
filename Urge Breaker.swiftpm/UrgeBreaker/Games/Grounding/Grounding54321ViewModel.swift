@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct GroundingStep {
     let title: String
@@ -8,11 +9,12 @@ struct GroundingStep {
     let icon: String
 }
 
+@MainActor
 class Grounding54321ViewModel: ObservableObject {
     @Published var currentStepIndex: Int = 0
     @Published var timeSpent: TimeInterval = 0
     
-    private var timer: Timer?
+    private var cancelable: AnyCancellable?
     var onComplete: () -> Void
     
     let steps: [GroundingStep] = [
@@ -80,14 +82,15 @@ class Grounding54321ViewModel: ObservableObject {
     }
     
     func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            self?.timeSpent += 1
-        }
+        cancelable = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+            .sink { [weak self] _ in
+                self?.timeSpent += 1
+            }
     }
     
     func stopTimer() {
-        timer?.invalidate()
-        timer = nil
+        cancelable?.cancel()
+        cancelable = nil
     }
     
     func finish() {

@@ -7,6 +7,21 @@ struct User: Codable, Identifiable {
     var currentStreak: Int
     var longestStreak: Int
     var lastCompletedDate: Date?
+    var primaryTriggers: [Trigger]
+    
+    // Phase 3 Settings
+    var notificationsEnabled: Bool
+    var wellnessRemindersEnabled: Bool
+    var focusShieldEnabled: Bool
+    
+    var level: Int {
+        return (totalPoints / 100) + 1
+    }
+    
+    var progressToNextLevel: Double {
+        let pointsInCurrentLevel = totalPoints % 100
+        return Double(pointsInCurrentLevel) / 100.0
+    }
     
     init() {
         self.id = UUID()
@@ -15,5 +30,9 @@ struct User: Codable, Identifiable {
         self.currentStreak = 0
         self.longestStreak = 0
         self.lastCompletedDate = nil
+        self.primaryTriggers = []
+        self.notificationsEnabled = true
+        self.wellnessRemindersEnabled = true
+        self.focusShieldEnabled = false
     }
 }

@@ -7,12 +7,20 @@ class HomeViewModel: ObservableObject {
     @Published var currentStreak: Int = 0
     @Published var showingGameSession: Bool = false
     
+    @Published var level: Int = 1
+    @Published var levelProgress: Double = 0.0
     @Published var weeklyData: [(day: String, count: Int, isToday: Bool)] = []
     
     // ... existing properties
     
     private var cancellables = Set<AnyCancellable>()
     private let urgeService: UrgeService
+    
+    private static let dayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "EEE"
+        return f
+    }()
     
     init(urgeService: UrgeService) {
         self.urgeService = urgeService
@@ -22,6 +30,8 @@ class HomeViewModel: ObservableObject {
             .sink { [weak self] user in
                 self?.totalPoints = user.totalPoints
                 self?.currentStreak = user.currentStreak
+                self?.level = user.level
+                self?.levelProgress = user.progressToNextLevel
             }
             .store(in: &cancellables)
             
@@ -52,9 +62,7 @@ class HomeViewModel: ObservableObject {
                 $0.completed && $0.startedAt >= dayStart && $0.startedAt < dayEnd
             }.count
             
-            let formatter = DateFormatter()
-            formatter.dateFormat = "EEE" // Mon, Tue
-            let dayLabel = formatter.string(from: date)
+            let dayLabel = Self.dayFormatter.string(from: date)
             let isToday = calendar.isDateInToday(date)
             
             data.append((day: dayLabel, count: count, isToday: isToday))

@@ -10,10 +10,14 @@ class DashboardViewModel: ObservableObject {
     @Published var longestStreak: Int = 0
     @Published var history: [UrgeSession] = []
     
+    // Insight Data
+    @Published var triggerDistribution: [Trigger: Int] = [:]
+    @Published var topTrigger: Trigger? = nil
+    
     private var cancellables = Set<AnyCancellable>()
     private let urgeService: UrgeService
     
-    init(urgeService: UrgeService = UrgeService()) {
+    init(urgeService: UrgeService) {
         self.urgeService = urgeService
         
         // Subscribe to changes in UrgeService
@@ -38,5 +42,15 @@ class DashboardViewModel: ObservableObject {
             guard let end = session.endedAt else { return false }
             return Calendar.current.isDate(end, inSameDayAs: today)
         }.count
+        
+        // Calculate Insights
+        var distribution: [Trigger: Int] = [:]
+        for session in sessions {
+            if let trigger = session.trigger {
+                distribution[trigger, default: 0] += 1
+            }
+        }
+        self.triggerDistribution = distribution
+        self.topTrigger = distribution.max(by: { $0.value < $1.value })?.key
     }
 }

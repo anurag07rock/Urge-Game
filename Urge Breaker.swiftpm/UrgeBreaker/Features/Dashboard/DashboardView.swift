@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct DashboardView: View {
-    @StateObject var viewModel = DashboardViewModel()
     @Environment(\.presentationMode) var presentationMode
+    @StateObject private var viewModel: DashboardViewModel
+    
+    init(urgeService: UrgeService) {
+        _viewModel = StateObject(wrappedValue: DashboardViewModel(urgeService: urgeService))
+    }
     
     var body: some View {
         ZStack {
@@ -68,6 +72,89 @@ struct DashboardView: View {
                         .cornerRadius(Theme.layoutRadius)
                         .shadow(color: Theme.Shadows.card, radius: 10, x: 0, y: 4)
                         
+                        // Weekly Insights
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Weekly Insights")
+                                .font(Theme.fontHeadline)
+                                .foregroundColor(.ubTextPrimary)
+                            
+                            if viewModel.triggerDistribution.isEmpty {
+                                Text("Complete more sessions to see your trigger patterns.")
+                                    .font(Theme.fontBody)
+                                    .foregroundColor(.secondary)
+                                    .padding()
+                            } else {
+                                VStack(spacing: 20) {
+                                    // Trigger Chart
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        ForEach(Trigger.allCases) { trigger in
+                                            let count = viewModel.triggerDistribution[trigger] ?? 0
+                                            let maxCount = viewModel.triggerDistribution.values.max() ?? 1
+                                            let ratio = Double(count) / Double(maxCount)
+                                            
+                                            HStack(spacing: 12) {
+                                                Image(systemName: trigger.icon)
+                                                    .foregroundColor(.ubPrimary)
+                                                    .frame(width: 24)
+                                                
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    HStack {
+                                                        Text(trigger.displayName)
+                                                            .font(Theme.fontCaption)
+                                                            .foregroundColor(.ubTextPrimary)
+                                                        Spacer()
+                                                        Text("\(count)")
+                                                            .font(Theme.fontCaption)
+                                                            .fontWeight(.bold)
+                                                            .foregroundColor(.secondary)
+                                                    }
+                                                    
+                                                    GeometryReader { geo in
+                                                        RoundedRectangle(cornerRadius: 4)
+                                                            .fill(Color.ubPrimary.opacity(0.1))
+                                                            .overlay(
+                                                                RoundedRectangle(cornerRadius: 4)
+                                                                    .fill(Color.ubPrimary)
+                                                                    .frame(width: geo.size.width * CGFloat(ratio)),
+                                                                alignment: .leading
+                                                            )
+                                                    }
+                                                    .frame(height: 8)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Personalized Suggestion
+                                    if let top = viewModel.topTrigger {
+                                        HStack(spacing: 16) {
+                                            Image(systemName: "lightbulb.fill")
+                                                .font(.title2)
+                                                .foregroundColor(.yellow)
+                                            
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text("Observation")
+                                                    .font(Theme.fontCaption)
+                                                    .foregroundColor(.secondary)
+                                                    .textCase(.uppercase)
+                                                Text(triggerSuggestion(for: top))
+                                                    .font(Theme.fontSubheadline)
+                                                    .foregroundColor(.ubTextPrimary)
+                                                    .fixedSize(horizontal: false, vertical: true)
+                                            }
+                                        }
+                                        .padding()
+                                        .background(Color.ubPrimary.opacity(0.05))
+                                        .cornerRadius(12)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(20)
+                        .background(Color.ubCardBackground)
+                        .cornerRadius(Theme.layoutRadius)
+                        .shadow(color: Theme.Shadows.card, radius: 10, x: 0, y: 4)
+                        
                         // History Section
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Recent History")
@@ -96,6 +183,21 @@ struct DashboardView: View {
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    private func triggerSuggestion(for trigger: Trigger) -> String {
+        let game: String
+        switch trigger {
+        case .stress:
+            game = "Stress Smash"
+        case .boredom:
+            game = "Memory Puzzle"
+        case .loneliness:
+            game = "Grounding 5-4-3-2-1"
+        case .habit:
+            game = "Pattern Break"
+        }
+        return "\(trigger.displayName) is your primary trigger. Try '\(game)' to help manage it."
     }
 }
 

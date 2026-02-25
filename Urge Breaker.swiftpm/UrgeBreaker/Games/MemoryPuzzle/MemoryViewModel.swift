@@ -52,15 +52,15 @@ class MemoryViewModel: BaseGameViewModel {
         // Flash each item in sequence
         var delay = 0.5
         for item in currentSequence {
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                self.flash(color: item.color)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                self?.flash(color: item.color)
             }
             delay += 0.8
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            self.isShowingSequence = false
-            self.message = "Repeat the pattern"
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            self?.isShowingSequence = false
+            self?.message = "Repeat the pattern"
         }
     }
     
@@ -69,9 +69,9 @@ class MemoryViewModel: BaseGameViewModel {
             flashColor = color
         }
         Haptics.playLight()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
             withAnimation {
-                self.flashColor = nil
+                self?.flashColor = nil
             }
         }
     }
@@ -81,6 +81,7 @@ class MemoryViewModel: BaseGameViewModel {
         
         flash(color: color)
         
+        guard playerSequence.count < currentSequence.count else { return }
         let expectedItem = currentSequence[playerSequence.count]
         if color == expectedItem.color {
             // Correct
@@ -90,16 +91,16 @@ class MemoryViewModel: BaseGameViewModel {
                 score += 10
                 Haptics.playSuccess()
                 sequenceLength += 1
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.startNewRound()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                    self?.startNewRound()
                 }
             }
         } else {
             // Wrong
             Haptics.playMedium()
             message = "Try again!"
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.startNewRound() // Restart same level or reset? Prompt implies simple flow.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.startNewRound()
             }
         }
     }

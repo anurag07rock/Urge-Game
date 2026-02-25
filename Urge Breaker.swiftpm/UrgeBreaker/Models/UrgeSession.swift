@@ -9,6 +9,7 @@ struct UrgeSession: Codable, Identifiable {
     var urgeIntensityBefore: Int?
     var urgeIntensityAfter: Int?
     var urgePassed: Bool
+    var trigger: Trigger?
     var pointsEarned: Int
     
     init(id: UUID = UUID(), gameType: GameType, intensityBefore: Int? = nil) {

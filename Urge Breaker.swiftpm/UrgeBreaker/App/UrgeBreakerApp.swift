@@ -15,6 +15,8 @@ struct UrgeBreakerApp: App {
             RootView()
                 .environmentObject(urgeService)
                 .environmentObject(themeManager)
+                .environmentObject(NotificationService.shared)
+                .environmentObject(FocusService.shared)
                 .preferredColorScheme(themeManager.currentScheme)
                 .onAppear {
                     Theme.applyAppAppearance()

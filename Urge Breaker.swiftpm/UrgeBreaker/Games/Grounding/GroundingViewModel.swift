@@ -4,7 +4,7 @@ import Combine
 @MainActor
 class GroundingViewModel: BaseGameViewModel {
     @Published var score: Int = 0
-    @Published var timeRemaining: TimeInterval = 30
+    @Published var timeRemaining: TimeInterval = Constants.gameDuration
     @Published var isGameOver: Bool = false
     var onComplete: (() -> Void)?
     
@@ -35,7 +35,7 @@ class GroundingViewModel: BaseGameViewModel {
     
     func startGame() {
         isGameOver = false
-        timeRemaining = 30
+        timeRemaining = Constants.gameDuration
         score = 0
         currentStageIndex = 0
         currentItemCount = 1

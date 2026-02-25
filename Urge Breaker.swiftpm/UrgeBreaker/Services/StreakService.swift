@@ -23,19 +23,17 @@ final class StreakService: @unchecked Sendable {
             return updatedUser
         }
         
-        // Check if yesterday (consecutive day)
-        if today.isYesterday(relativeTo: lastDate.addingTimeInterval(86400)) { // lastDate + 1 day should be around today
-             // More robust: is 'lastDate' yesterday relative to 'today'?
-             if Calendar.current.isDate(lastDate, inSameDayAs: today.addingTimeInterval(-86400)) {
-                 updatedUser.currentStreak += 1
-             } else {
-                 // It's been more than a day
-                 updatedUser.currentStreak = 1
-             }
-        } else {
-             // Reset
-             updatedUser.currentStreak = 1
+        // Check if consecutive day using reliable Calendar arithmetic
+        let calendar = Calendar.current
+        let daysBetween = calendar.dateComponents([.day], from: calendar.startOfDay(for: lastDate), to: calendar.startOfDay(for: today)).day ?? 0
+        if daysBetween == 1 {
+            // Yesterday — streak continues
+            updatedUser.currentStreak += 1
+        } else if daysBetween > 1 {
+            // Missed one or more days — reset
+            updatedUser.currentStreak = 1
         }
+        // daysBetween == 0 already handled above (same day case)
         
         // Update longest
         if updatedUser.currentStreak > updatedUser.longestStreak {

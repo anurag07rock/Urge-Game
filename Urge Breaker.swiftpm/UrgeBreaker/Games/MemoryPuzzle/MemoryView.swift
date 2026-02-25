@@ -8,12 +8,10 @@ struct MemoryView: View {
             Color.ubBackground.ignoresSafeArea()
             
             VStack {
+                Spacer().frame(height: 80)
+                
                 // Header
                 HStack {
-                    GameBackButton(onDismiss: {
-                        viewModel.endGame()
-                    })
-                    
                     Spacer()
                     
                     HStack(spacing: 16) {
@@ -34,7 +32,7 @@ struct MemoryView: View {
                             .cornerRadius(12)
                     }
                 }
-                .padding()
+                .padding(.horizontal)
                 
                 Spacer()
                 

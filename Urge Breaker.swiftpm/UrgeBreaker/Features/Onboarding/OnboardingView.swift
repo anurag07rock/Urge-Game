@@ -43,14 +43,50 @@ struct OnboardingView: View {
                 
                 // Screen 4: Game Overview
                 OnboardingPageView(
-                    title: "5 Reset Tools",
-                    description: "Tap for Energy • Memory for Focus • Hold for Control • Breathe for Calm • Grounding for Stability",
+                    title: "19 Reset Tools",
+                    description: "Breathing • Grounding • Memory • Rhythm • Focus Sniper • Stress Smash • Freeze Challenge",
                     icon: "gamecontroller.fill",
                     color: .purple
                 )
                 .tag(3)
                 
-                // Screen 5: Get Started
+                // Screen 5: Primary Triggers
+                VStack(spacing: 30) {
+                    Text("What triggers your urges?")
+                        .font(Theme.fontTitle)
+                        .multilineTextAlignment(.center)
+                    
+                    Text("Select the areas you want to focus on.")
+                        .font(Theme.fontBody)
+                        .foregroundColor(.secondary)
+                    
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(Trigger.allCases) { trigger in
+                                TriggerChip(
+                                    trigger: trigger,
+                                    isSelected: urgeService.currentUser.primaryTriggers.contains(trigger),
+                                    action: {
+                                        var triggers = urgeService.currentUser.primaryTriggers
+                                        if let index = triggers.firstIndex(of: trigger) {
+                                            triggers.remove(at: index)
+                                        } else {
+                                            triggers.append(trigger)
+                                        }
+                                        urgeService.currentUser.primaryTriggers = triggers
+                                    }
+                                )
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                        .padding(.vertical, 10)
+                    }
+                    .frame(height: 250)
+                }
+                .padding(.horizontal, 40)
+                .tag(4)
+                
+                // Screen 6: Get Started
                 VStack(spacing: 30) {
                     Image(systemName: "figure.walk")
                         .font(.system(size: 100))
@@ -80,7 +116,7 @@ struct OnboardingView: View {
                     .padding(.top, 20)
                 }
                 .padding(.horizontal, 40)
-                .tag(4)
+                .tag(5)
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
@@ -89,7 +125,7 @@ struct OnboardingView: View {
             // but standard swiping + final button is clean.
             // Let's add a "Continue" button at the bottom for pages 0-3
             
-            if viewModel.currentPageIndex < 4 {
+            if viewModel.currentPageIndex < 5 {
                 VStack {
                     Spacer()
                     Button("Continue") {
