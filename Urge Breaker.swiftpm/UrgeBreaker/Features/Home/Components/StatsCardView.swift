@@ -51,5 +51,6 @@ struct StatsCardView: View {
         .background(Color.ubCardBackground)
         .cornerRadius(Theme.layoutRadius)
         .shadow(color: Theme.Shadows.card, radius: 8, x: 0, y: 4)
+        .contentShape(RoundedRectangle(cornerRadius: Theme.layoutRadius))
     }
 }

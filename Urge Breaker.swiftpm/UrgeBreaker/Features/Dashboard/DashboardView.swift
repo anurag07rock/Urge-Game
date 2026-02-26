@@ -50,6 +50,7 @@ struct DashboardView: View {
                             StatCard(title: "Current Streak", value: "\(viewModel.currentStreak)")
                             StatCard(title: "Best Streak", value: "\(viewModel.longestStreak)")
                         }
+                        .scrollReveal(index: 0)
                         
                         // Points Banner
                         HStack {
@@ -71,6 +72,7 @@ struct DashboardView: View {
                         .background(Color.ubCardBackground)
                         .cornerRadius(Theme.layoutRadius)
                         .shadow(color: Theme.Shadows.card, radius: 10, x: 0, y: 4)
+                        .scrollReveal(index: 1)
                         
                         // Weekly Insights
                         VStack(alignment: .leading, spacing: 16) {
@@ -154,7 +156,7 @@ struct DashboardView: View {
                         .background(Color.ubCardBackground)
                         .cornerRadius(Theme.layoutRadius)
                         .shadow(color: Theme.Shadows.card, radius: 10, x: 0, y: 4)
-                        
+                        .scrollReveal(index: 2)
                         // History Section
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Recent History")
@@ -170,8 +172,9 @@ struct DashboardView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             } else {
                                 LazyVStack(spacing: 12) {
-                                    ForEach(viewModel.history) { session in
+                                    ForEach(Array(viewModel.history.enumerated()), id: \.element.id) { index, session in
                                         HistoryRow(session: session)
+                                            .scrollReveal(index: index)
                                     }
                                 }
                             }
@@ -189,13 +192,13 @@ struct DashboardView: View {
         let game: String
         switch trigger {
         case .stress:
-            game = "Stress Smash"
+            game = "Logic Code Breaker"
         case .boredom:
-            game = "Memory Puzzle"
+            game = "Minimal 2048"
         case .loneliness:
-            game = "Grounding 5-4-3-2-1"
+            game = "Zen Sudoku"
         case .habit:
-            game = "Pattern Break"
+            game = "Sliding Puzzle"
         }
         return "\(trigger.displayName) is your primary trigger. Try '\(game)' to help manage it."
     }

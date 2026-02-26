@@ -16,6 +16,7 @@ struct GameSessionView: View {
     var body: some View {
         ZStack {
             Color.ubBackground.ignoresSafeArea()
+            CalmBackgroundView()
             
             switch viewModel.currentState {
             case .preCheck:
@@ -25,20 +26,29 @@ struct GameSessionView: View {
                     onContinue: { viewModel.startSession() },
                     namespace: namespace
                 )
-                .transition(.opacity)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal: .move(edge: .leading).combined(with: .opacity)
+                ))
 
             case .gamePicker:
                 GamePickerView(
                     gameOptions: viewModel.gameOptions,
                     onSelect: { game in viewModel.selectGame(game) }
                 )
-                .transition(.opacity)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal: .move(edge: .leading).combined(with: .opacity)
+                ))
             case .instructions:
                 if let gameType = viewModel.selectedGame {
                     GameInstructionView(gameType: gameType) {
                         viewModel.startGameConfirmed()
                     }
-                    .transition(.opacity)
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing).combined(with: .opacity),
+                        removal: .move(edge: .leading).combined(with: .opacity)
+                    ))
                 }
                 
             case .playing:
@@ -56,7 +66,10 @@ struct GameSessionView: View {
                 ) { selectedIntensity in
                     viewModel.completeSession(intensityAfter: selectedIntensity)
                 }
-                .transition(.opacity)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal: .move(edge: .leading).combined(with: .opacity)
+                ))
 
             case .summary:
                 SessionSummaryView(
@@ -72,9 +85,13 @@ struct GameSessionView: View {
                         viewModel.playAgain()
                     }
                 )
-                .transition(.opacity)
+                .transition(.asymmetric(
+                    insertion: .scale(scale: 0.95).combined(with: .opacity),
+                    removal: .opacity
+                ))
             }
         }
+        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: viewModel.currentState)
         .overlay(
             GameBackButton(onDismiss: {
                 viewModel.dismiss()
@@ -303,6 +320,7 @@ struct ReflectionButton: View {
     let color: Color
     let icon: String
     let action: () -> Void
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
     
     var body: some View {
         Button(action: action) {
@@ -321,6 +339,7 @@ struct ReflectionButton: View {
             .cornerRadius(Theme.layoutRadius)
             .shadow(color: color.opacity(0.3), radius: 8, x: 0, y: 4)
         }
+        .buttonStyle(CardPressStyle())
     }
 }
 
@@ -368,9 +387,11 @@ struct SessionSummaryView: View {
                 // Intensity Comparison Card
                 HStack(spacing: 0) {
                     VStack {
-                        Text("\(intensityBefore)")
-                            .font(.system(size: 40, weight: .bold, design: .rounded))
-                            .foregroundColor(.ubDanger)
+                        SmoothScoreText(
+                            value: intensityBefore,
+                            font: .system(size: 40, weight: .bold, design: .rounded),
+                            color: .ubDanger
+                        )
                         Text("Before")
                             .font(Theme.fontCaption)
                             .foregroundColor(.secondary)
@@ -382,9 +403,11 @@ struct SessionSummaryView: View {
                         .foregroundColor(.secondary)
                     
                     VStack {
-                        Text("\(intensityAfter)")
-                            .font(.system(size: 40, weight: .bold, design: .rounded))
-                            .foregroundColor(.ubSuccess)
+                        SmoothScoreText(
+                            value: intensityAfter,
+                            font: .system(size: 40, weight: .bold, design: .rounded),
+                            color: .ubSuccess
+                        )
                         Text("After")
                             .font(Theme.fontCaption)
                             .foregroundColor(.secondary)
@@ -401,8 +424,15 @@ struct SessionSummaryView: View {
                     HStack {
                         Image(systemName: "star.fill")
                             .foregroundColor(.ubAccent)
-                        Text("Points Earned: \(points)")
-                            .font(Theme.fontHeadline)
+                        HStack(spacing: 4) {
+                            Text("Points Earned:")
+                                .font(Theme.fontHeadline)
+                            SmoothScoreText(
+                                value: points,
+                                font: Theme.fontHeadline,
+                                color: .ubTextPrimary
+                            )
+                        }
                         Spacer()
                     }
                     .padding()
@@ -445,6 +475,7 @@ struct SessionSummaryView: View {
                             .background(Color.ubPrimary)
                             .cornerRadius(Theme.layoutRadius)
                     }
+                    .buttonStyle(CardPressStyle())
                     .shadow(color: Color.ubPrimary.opacity(0.3), radius: 10, x: 0, y: 5)
                     
                     Button("Keep Going", action: onPlayAgain)
@@ -569,7 +600,7 @@ struct GamePickerView: View {
                         .cornerRadius(Theme.layoutRadius)
                         .shadow(color: Theme.Shadows.card, radius: 8, x: 0, y: 4)
                     }
-                    .buttonStyle(PlainButtonStyle())
+                    .buttonStyle(CardPressStyle())
                 }
             }
             .padding(.horizontal, Theme.layoutPadding)

@@ -29,23 +29,28 @@ struct HomeView: View {
                             statsView
                         }
                         .padding(.top, 20)
+                        .scrollReveal(index: 0)
                         
                         // Main Action Section
                         VStack(spacing: 12) {
                             urgeButtonView
                         }
                         .padding(.vertical, 10)
+                        .scrollReveal(index: 1)
                         
                         // Insights Section
                         VStack(alignment: .leading, spacing: 20) {
                             SectionHeader(title: "Weekly Activity", icon: "chart.xyaxis.line")
+                                .navLinkHighlight()
                             WeeklyGraphView(data: viewModel.weeklyData)
                             
                             NavigationLink(destination: DashboardView(urgeService: urgeService)) {
                                 DashboardCardView()
                             }
+                            .buttonStyle(CardPressStyle())
                         }
                         .padding(.bottom, 50)
+                        .scrollReveal(index: 2)
                     }
                     .padding(.horizontal, Theme.layoutPadding)
                 }
@@ -80,16 +85,18 @@ struct HomeView: View {
     private var backgroundGlows: some View {
         ZStack {
             Circle()
-                .fill(Color.ubPrimary.opacity(0.1))
+                .fill(Color.ubPrimary)
                 .frame(width: 400, height: 400)
                 .blur(radius: 80)
                 .offset(x: -150, y: -200)
+                .pulsingGlow()
             
             Circle()
-                .fill(Color.ubSecondary.opacity(0.1))
+                .fill(Color.ubSecondary)
                 .frame(width: 300, height: 300)
                 .blur(radius: 60)
                 .offset(x: 100, y: 150)
+                .pulsingGlow()
         }
         .ignoresSafeArea()
     }
@@ -108,6 +115,19 @@ struct HomeView: View {
             Spacer()
             
             HStack(spacing: 12) {
+                // Music Settings
+                NavigationLink(destination: MusicSettingsView()) {
+                    Image(systemName: "headphones")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(.ubPrimary)
+                        .padding(10)
+                        .background(
+                            Circle()
+                                .fill(Color.ubSurface)
+                                .shadow(color: Theme.Shadows.card, radius: 4, x: 0, y: 2)
+                        )
+                }
+                
                 // Focus Settings
                 NavigationLink(destination: FocusSettingsView()) {
                     Image(systemName: "shield.fill")

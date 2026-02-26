@@ -23,6 +23,8 @@ struct TriggerChip: View {
                     .stroke(isSelected ? Color.ubPrimary : Color.secondary.opacity(0.2), lineWidth: 1)
             )
             .shadow(color: isSelected ? Color.ubPrimary.opacity(0.2) : Color.clear, radius: 4, x: 0, y: 2)
+            .scaleEffect(isSelected ? 1.05 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
         }
     }
 }
