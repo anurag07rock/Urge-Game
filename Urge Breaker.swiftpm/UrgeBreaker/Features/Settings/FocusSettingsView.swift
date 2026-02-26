@@ -45,6 +45,7 @@ struct FocusSettingsView: View {
                             ))
                             .tint(.ubPrimary)
                         }
+                        .scrollReveal(index: 0)
                         
                         // Focus Shield Section
                         SettingsSection(title: "Focus Shield") {
@@ -82,12 +83,14 @@ struct FocusSettingsView: View {
                             ))
                             .tint(.ubPrimary)
                         }
+                        .scrollReveal(index: 1)
                         
                         Text("Urge Breaker uses Apple's Screen Time API to help you stay focused. Your data never leaves your device.")
                             .font(Theme.fontCaption)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
+                            .scrollReveal(index: 2)
                     }
                     .padding()
                 }

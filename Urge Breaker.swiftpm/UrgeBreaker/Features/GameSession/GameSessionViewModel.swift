@@ -3,7 +3,7 @@ import Combine
 
 @MainActor
 class GameSessionViewModel: ObservableObject {
-    enum State {
+    enum State: Equatable {
         case preCheck
         case gamePicker
         case instructions
@@ -33,29 +33,29 @@ class GameSessionViewModel: ObservableObject {
         if let trigger = selectedTrigger {
             switch trigger {
             case .stress:
-                gameOptions = [.volcanoVent, .waveRider, .thunderJar]
+                gameOptions = [.logicCodeBreaker, .minimal2048]
             case .boredom:
-                gameOptions = [.bubblePopBlitz, .iceSculptor, .moodMixer]
+                gameOptions = [.minimal2048, .slidingPuzzle]
             case .loneliness:
-                gameOptions = [.connectionConstellation, .rootAndGrow, .mirrorMind]
+                gameOptions = [.zenSudoku, .logicCodeBreaker]
             case .habit:
-                gameOptions = [.patternBreak, .unravel, .summitClimb]
+                gameOptions = [.slidingPuzzle, .zenSudoku]
             }
         } else {
             // Default intensity-based selection (no picker needed)
             switch Int(intensity) {
             case 1:
-                selectedGame = .breathing
+                selectedGame = .zenSudoku
             case 2:
-                selectedGame = .rhythmPulse
+                selectedGame = .zenSudoku
             case 3:
-                selectedGame = .focusSniper
+                selectedGame = .slidingPuzzle
             case 4:
-                selectedGame = .stressSmash
+                selectedGame = .logicCodeBreaker
             case 5:
-                selectedGame = .focusHold
+                selectedGame = .minimal2048
             default:
-                selectedGame = .breathing
+                selectedGame = .zenSudoku
             }
             
             guard let game = selectedGame else { return }

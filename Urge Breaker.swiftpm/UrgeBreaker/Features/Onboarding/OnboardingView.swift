@@ -43,8 +43,8 @@ struct OnboardingView: View {
                 
                 // Screen 4: Game Overview
                 OnboardingPageView(
-                    title: "19 Reset Tools",
-                    description: "Breathing • Grounding • Memory • Rhythm • Focus Sniper • Stress Smash • Freeze Challenge",
+                    title: "4 Puzzle Games",
+                    description: "Logic Code Breaker • Minimal 2048 • Zen Sudoku • Sliding Puzzle",
                     icon: "gamecontroller.fill",
                     color: .purple
                 )
@@ -113,6 +113,8 @@ struct OnboardingView: View {
                             .cornerRadius(28)
                             .shadow(color: Color.ubPrimary.opacity(0.3), radius: 8, x: 0, y: 4)
                     }
+                    .buttonStyle(CardPressStyle())
+                    .modifier(ButtonShimmer())
                     .padding(.top, 20)
                 }
                 .padding(.horizontal, 40)
@@ -120,6 +122,7 @@ struct OnboardingView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
+            .animation(.easeInOut(duration: 0.3), value: viewModel.currentPageIndex)
             
             // Navigation Buttons (Skip / Next) logic could go here, 
             // but standard swiping + final button is clean.
@@ -129,7 +132,7 @@ struct OnboardingView: View {
                 VStack {
                     Spacer()
                     Button("Continue") {
-                        withAnimation {
+                        withAnimation(.easeInOut(duration: 0.3)) {
                             viewModel.currentPageIndex += 1
                         }
                     }

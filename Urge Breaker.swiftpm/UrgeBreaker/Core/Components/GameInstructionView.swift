@@ -12,17 +12,19 @@ struct GameInstructionView: View {
                 Spacer()
                 
                 // Icon
-                Image(systemName: iconName(for: gameType))
+                Image(systemName: gameType.icon)
                     .font(.system(size: 80))
                     .foregroundColor(.ubPrimary)
                     .padding()
                     .background(Circle().fill(Color.ubSurface))
                     .shadow(radius: 5)
+                    .scrollReveal(index: 0)
                 
                 // Title
                 Text(gameType.displayName)
                     .font(Theme.fontTitle)
                     .multilineTextAlignment(.center)
+                    .scrollReveal(index: 1)
                 
                 // Instructions
                 VStack(alignment: .leading, spacing: 16) {
@@ -39,6 +41,7 @@ struct GameInstructionView: View {
                                 .foregroundColor(.primary)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
+                        .scrollReveal(index: index + 2)
                     }
                 }
                 .padding(.horizontal, 40)
@@ -61,33 +64,11 @@ struct GameInstructionView: View {
                         .cornerRadius(28)
                         .shadow(color: Color.ubPrimary.opacity(0.3), radius: 8, x: 0, y: 4)
                 }
+                .buttonStyle(CardPressStyle())
+                .modifier(ButtonShimmer())
                 .padding(.horizontal, 40)
                 .padding(.bottom, 40)
             }
-        }
-    }
-    
-    private func iconName(for gameType: GameType) -> String {
-        switch gameType {
-        case .breathing: return "wind"
-        case .stressSmash: return "hand.tap.fill"
-        case .focusSniper: return "scope"
-        case .rhythmPulse: return "waveform.circle"
-        case .memoryPuzzle: return "brain.head.profile"
-        case .focusHold: return "circle.circle.fill"
-        case .grounding: return "leaf.fill"
-        case .volcanoVent: return "flame.fill"
-        case .bubblePopBlitz: return "bubbles.and.sparkles.fill"
-        case .connectionConstellation: return "sparkles"
-        case .patternBreak: return "square.grid.2x2.fill"
-        case .waveRider: return "water.waves"
-        case .thunderJar: return "bolt.fill"
-        case .iceSculptor: return "snowflake"
-        case .moodMixer: return "theatermasks.fill"
-        case .rootAndGrow: return "tree.fill"
-        case .mirrorMind: return "circle.grid.2x2.fill"
-        case .unravel: return "lasso"
-        case .summitClimb: return "mountain.2.fill"
         }
     }
 }

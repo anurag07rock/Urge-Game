@@ -15,16 +15,19 @@ struct OnboardingPageView: View {
                 .background(Circle().fill(Color.ubSurface))
                 .shadow(radius: 5)
                 .padding(.bottom, 20)
+                .scrollReveal(index: 0)
             
             Text(title)
                 .font(Theme.fontTitle)
                 .multilineTextAlignment(.center)
+                .scrollReveal(index: 1)
             
             Text(description)
                 .font(Theme.fontBody)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .lineLimit(nil)
+                .scrollReveal(index: 2)
         }
         .padding(.horizontal, 40)
     }
